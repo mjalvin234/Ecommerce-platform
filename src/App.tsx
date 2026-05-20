@@ -82,7 +82,7 @@ const Navbar = ({ view, setView, currentRole, setRole }: any) => (
 );
 
 const Footer = () => (
-  <footer className="bg-gray-100 border-t border-exchange-border mt-24 py-12">
+  <footer className="bg-gray-100 border-t border-exchange-border mt-8 py-8">
     <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
       <div className="col-span-2">
         <div className="font-bold text-lg mb-4 flex items-center gap-2">
