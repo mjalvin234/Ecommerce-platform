@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-exchange-dark: #0f172a;
+  --color-exchange-blue: #1e3a8a;
+  --color-exchange-accent: #0284c7;
+  --color-exchange-surface: #f8fafc;
+  --color-exchange-border: #e2e8f0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-exchange-surface);
+  color: var(--color-exchange-dark);
+}
+
+.data-row {
+  display: grid;
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-exchange-border);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.data-row:hover {
+  background: var(--color-exchange-dark);
+  color: white;
+}
+
+.col-header {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.6;
+  font-weight: 500;
+}
+
+.data-value-mono {
+  font-family: var(--font-mono);
+  letter-spacing: -0.02em;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--color-exchange-border);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
