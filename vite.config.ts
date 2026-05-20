@@ -7,7 +7,7 @@ import { viteSingleFile } from 'vite-plugin-singlefile';
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
-    base: './', // CRITICAL for local file execution
+    base: '/Ecommerce-platform/', // GitHub Pages deployment
     build: {
       target: 'es2015',
       assetsInlineLimit: 100000000,
