@@ -634,9 +634,11 @@ const BuyerCenter = ({ orders, negotiations, markOrderPaid, completeOrder, cance
 // ---------------------------------------------------------
 // SELLER CENTER
 // ---------------------------------------------------------
-const SellerCenter = ({ inventory, orders, negotiations, acceptNegotiation, shipOrder, addInventory, showToast, setRole }: any) => {
+const SellerCenter = ({ inventory, orders, negotiations, acceptNegotiation, shipOrder, addInventory, updateInventoryPrice, showToast, setRole }: any) => {
   const [activeTab, setActiveTab] = useState('inventory');
   const [shipModalOrder, setShipModalOrder] = useState<any>(null);
+  const [priceModalItem, setPriceModalItem] = useState<any>(null);
+  const [newPrice, setNewPrice] = useState("");
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row gap-8 animate-in fade-in duration-300">
@@ -699,7 +701,13 @@ const SellerCenter = ({ inventory, orders, negotiations, acceptNegotiation, ship
                     <div className="col-span-3 text-left sm:text-right flex justify-start sm:justify-end gap-2 items-center">
                       <span className="w-2 h-2 rounded-full bg-green-500"></span>
                       <span className="text-xs text-gray-500 mr-2">上架正常</span>
-                      <button className="text-xs text-gray-600 underline hover:text-black">调价</button>
+                      <button
+                        onClick={() => {
+                          setPriceModalItem(item);
+                          setNewPrice(item.price.toString());
+                        }}
+                        className="text-xs text-gray-600 underline hover:text-black"
+                      >调价</button>
                     </div>
                   </div>
                 ))}
@@ -879,6 +887,76 @@ const SellerCenter = ({ inventory, orders, negotiations, acceptNegotiation, ship
           </div>
         </div>
       )}
+
+      {/* 调价弹窗 */}
+      {priceModalItem && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95">
+            <div className="flex justify-between items-center p-4 border-b border-gray-100 bg-gray-50">
+              <h3 className="font-bold text-lg flex items-center gap-2">
+                <FileText className="w-5 h-5 text-exchange-accent" /> 调整挂牌价格
+              </h3>
+              <button onClick={() => setPriceModalItem(null)} className="text-gray-400 hover:text-gray-700">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              updateInventoryPrice(priceModalItem.id, Number(newPrice));
+              setPriceModalItem(null);
+              showToast(`价格已更新！${priceModalItem.part} 新单价: ¥${Number(newPrice).toFixed(2)}`);
+            }} className="p-6">
+              <div className="bg-gray-50 p-3 rounded-lg border border-gray-200 mb-5 text-sm">
+                <div className="flex justify-between mb-2">
+                  <span className="text-gray-500">物料型号:</span>
+                  <span className="font-mono font-bold text-gray-900">{priceModalItem.part}</span>
+                </div>
+                <div className="flex justify-between mb-2">
+                  <span className="text-gray-500">库存数量:</span>
+                  <span className="font-mono font-medium">{priceModalItem.qty.toLocaleString()} 件</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">当前价格:</span>
+                  <span className="font-mono font-bold text-red-600">¥ {priceModalItem.price.toFixed(2)}</span>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wide text-gray-700 mb-1">新挂牌单价 (含税)</label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-3 font-mono text-gray-500">¥</span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0.01"
+                      required
+                      className="w-full border border-gray-300 rounded-lg pl-8 pr-4 py-2.5 font-mono focus:ring-2 focus:ring-exchange-accent outline-none font-bold text-blue-800"
+                      value={newPrice}
+                      onChange={(e) => setNewPrice(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-gray-100 flex justify-between items-center bg-gray-50 p-2 rounded">
+                  <span className="text-xs text-gray-500 font-bold uppercase">预计库存总值:</span>
+                  <span className="font-mono text-lg font-bold">¥ {((Number(newPrice) || 0) * priceModalItem.qty).toLocaleString()}</span>
+                </div>
+              </div>
+
+              <div className="mt-8 flex gap-3">
+                <button type="button" onClick={() => setPriceModalItem(null)} className="flex-1 px-4 py-2.5 bg-gray-100 text-gray-700 text-sm font-bold rounded-lg hover:bg-gray-200 transition-colors">
+                  取消
+                </button>
+                <button type="submit" className="flex-1 px-4 py-2.5 bg-exchange-dark text-white text-sm font-bold rounded-lg hover:bg-exchange-accent transition-colors shadow">
+                  确认调价
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -954,6 +1032,10 @@ export default function App() {
     setInventory([newItem, ...inventory]);
   };
 
+  const updateInventoryPrice = (id: string, newPrice: number) => {
+    setInventory(inventory.map(item => item.id === id ? { ...item, price: newPrice } : item));
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-exchange-surface font-sans text-exchange-dark selection:bg-exchange-accent selection:text-white">
       <Navbar view={currentView} setView={setCurrentView} currentRole={role} setRole={setRole} />
@@ -962,7 +1044,7 @@ export default function App() {
         {currentView === 'home' && <HomeView setView={setCurrentView} handleSearch={handleSearch} />}
         {currentView === 'search' && <SearchView currentQuery={searchParams} setView={setCurrentView} showToast={setToast} inventory={inventory} createOrder={createOrder} createNegotiation={createNegotiation} />}
         {currentView === 'buyer-center' && <BuyerCenter orders={orders} negotiations={negotiations} markOrderPaid={markOrderPaid} completeOrder={completeOrder} cancelOrder={cancelOrder} showToast={setToast} setRole={setRole} setView={setCurrentView} />}
-        {currentView === 'seller-center' && <SellerCenter orders={orders} negotiations={negotiations} inventory={inventory} acceptNegotiation={acceptNegotiation} shipOrder={shipOrder} addInventory={addInventory} showToast={setToast} setRole={setRole} />}
+        {currentView === 'seller-center' && <SellerCenter orders={orders} negotiations={negotiations} inventory={inventory} acceptNegotiation={acceptNegotiation} shipOrder={shipOrder} addInventory={addInventory} updateInventoryPrice={updateInventoryPrice} showToast={setToast} setRole={setRole} />}
       </main>
 
       <Footer />
