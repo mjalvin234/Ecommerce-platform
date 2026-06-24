@@ -1,0 +1,15 @@
+# 交易中心后端环境变量
+# 复制此文件为 .env 并修改对应值
+
+# 服务器端口
+PORT=3001
+
+# JWT 密钥（必须配置，不可使用默认值）
+JWT_SECRET=i5MREreSPg9kPQGpGjQQUY0XqdSZCssAO9m8dJDYJEtfsHKvOLCoRbYTWY1QMn3v
+
+# Token 过期时间
+JWT_EXPIRES_IN=7d
+JWT_REFRESH_EXPIRES_IN=30d
+
+# 前端地址（CORS）
+FRONTEND_URL=http://localhost:3000

@@ -1,0 +1,30 @@
+{
+  "name": "trading-center-workers",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "build": "tsc",
+    "db:migrate": "wrangler d1 migrations apply trading-center-db",
+    "db:create": "wrangler d1 create trading-center-db",
+    "db:export": "tsx scripts/export-sqlite-to-d1.ts",
+    "tail": "wrangler tail"
+  },
+  "dependencies": {
+    "hono": "^4.6.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^10.0.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241127.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/uuid": "^10.0.0",
+    "typescript": "^5.6.0",
+    "wrangler": "^3.91.0",
+    "tsx": "^4.21.0"
+  }
+}

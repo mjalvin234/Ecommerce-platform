@@ -1,0 +1,60 @@
+import { Hono } from 'hono';
+import { authMiddleware } from '../middlewares/auth.middleware';
+
+const userRoutes = new Hono();
+
+// 所有用户路由都需要认证
+userRoutes.use('*', authMiddleware);
+
+// 获取当前用户信息
+userRoutes.get('/me', async (c) => {
+  const user = c.get('user');
+
+  const result = await c.env.DB.prepare(
+    'SELECT id, email, company_name, role, verification_status, credit_score, created_at FROM users WHERE id = ?'
+  ).bind(user.id).first();
+
+  if (!result) {
+    return c.json({
+      success: false,
+      error: { message: '用户不存在' },
+    }, 404);
+  }
+
+  return c.json({
+    success: true,
+    data: {
+      id: result.id,
+      email: result.email,
+      companyName: result.company_name,
+      role: result.role,
+      verificationStatus: result.verification_status,
+      creditScore: result.credit_score,
+      createdAt: result.created_at,
+    },
+  });
+});
+
+// 更新用户信息
+userRoutes.put('/me', async (c) => {
+  const user = c.get('user');
+  const { companyName } = await c.req.json();
+
+  if (!companyName) {
+    return c.json({
+      success: false,
+      error: { message: '公司名称不能为空' },
+    }, 400);
+  }
+
+  await c.env.DB.prepare(
+    'UPDATE users SET company_name = ?, updated_at = ? WHERE id = ?'
+  ).bind(companyName, new Date().toISOString(), user.id).run();
+
+  return c.json({
+    success: true,
+    message: '更新成功',
+  });
+});
+
+export default userRoutes;

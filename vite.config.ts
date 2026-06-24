@@ -6,8 +6,10 @@ import { viteSingleFile } from 'vite-plugin-singlefile';
 
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
+  const isProduction = mode === 'production';
   return {
-    base: '/Ecommerce-platform/', // GitHub Pages deployment
+    // 生产环境使用 GitHub Pages 路径，开发环境使用根路径
+    base: isProduction ? '/Ecommerce-platform/' : '/',
     build: {
       target: 'es2015',
       assetsInlineLimit: 100000000,
@@ -31,9 +33,22 @@ export default defineConfig(({mode}) => {
       },
     },
     server: {
-      // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
-      hmr: process.env.DISABLE_HMR !== 'true',
+      host: false, // 只允许本地访问，禁止外部网络访问
+      port: 3000,
+      proxy: {
+        '/api': {
+          target: 'http://localhost:3001',
+          changeOrigin: true,
+        },
+      },
+    },
+    // Vitest 配置
+    test: {
+      globals: true,
+      environment: 'node',
+      include: ['server/src/__tests__/**/*.test.ts'],
+      testTimeout: 30000,
+      hookTimeout: 30000,
     },
   };
 });

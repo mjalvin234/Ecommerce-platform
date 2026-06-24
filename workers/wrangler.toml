@@ -1,0 +1,41 @@
+name = "trading-center-api"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# 账号ID（部署时需要修改）
+# account_id = "your-account-id"
+
+# D1 数据库绑定
+[[d1_databases]]
+binding = "DB"
+database_name = "trading-center-db"
+database_id = "your-database-id"  # 部署时需要修改
+
+# R2 存储绑定（用于文件上传）
+[[r2_buckets]]
+binding = "UPLOADS"
+bucket_name = "trading-center-uploads"
+
+# 环境变量（敏感信息请使用 wrangler secret put）
+[vars]
+ENVIRONMENT = "production"
+JWT_EXPIRES_IN = "7d"
+JWT_REFRESH_EXPIRES_IN = "30d"
+
+# 开发环境配置
+[dev]
+port = 8787
+local_protocol = "http"
+
+# 构建配置
+[build]
+command = "npm run build"
+
+# 定时任务（可选）
+# [[triggers.durables_objects]]
+# bindings = [{ name = "SCHEDULER", class_name = "Scheduler" }]
+
+# Cron 触发器（用于定时任务）
+# [[triggers.crons]]
+# cron = "0 0 * * *"  # 每天0点执行

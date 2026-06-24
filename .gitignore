@@ -7,3 +7,9 @@ coverage/
 .env*
 !.env.example
 miniprogram/
+
+# Server
+server/.env
+server/dist/
+server/data/*.db
+postgres_data/

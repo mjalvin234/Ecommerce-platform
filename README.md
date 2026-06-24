@@ -1,85 +1,134 @@
 # 芯核交易中心
 
-这是一个基于 `Vite + React + TypeScript` 的前端演示项目，已经整理为同时支持以下三种本地使用方式：
+B2B 电子元器件交易平台（React + Express + SQLite）
 
-1. 直接演示：双击离线演示 HTML
-2. 开发模式：启动本地开发服务进行调试
-3. 离线构建：生成单文件 HTML 后，再双击在本机打开
+## 技术栈
 
-**目录说明**：本目录 `可以分享/` 为可对外提供的工程根目录；上级目录中的 `不可以分享/` 仅作「勿提交密钥」说明，不含运行源码。所有 `npm` 命令请在本目录（`可以分享`）下执行。
+| 层级 | 技术 |
+|------|------|
+| 前端 | React 19 + TypeScript + Tailwind CSS |
+| 后端 | Node.js + Express + TypeScript |
+| 数据库 | SQLite（零配置） |
+| 认证 | JWT Token |
 
-## 当前目录结构
+---
 
-```text
-.
-├── 00_双击打开演示.html      # 推荐发给客户的直接演示入口
-├── index.html                 # Vite 开发入口
-├── open-local.command         # macOS 下双击自动打开可用页面
-├── package.json               # 项目脚本
-├── package-lock.json
-├── tsconfig.json
-├── vite.config.ts             # Vite 配置，已支持相对路径构建
-├── .env.example               # 环境变量示例（勿将真实 .env 提交到 Git）
-├── metadata.json
-├── scripts/
-│   └── build-offline.cjs      # 生成离线 HTML
-├── src/                       # React 源码
-├── miniprogram/               # 微信小程序（开发者工具请打开此目录）
-└── README.md
-```
+## 启动步骤
 
-## 方式一：直接双击演示
-
-如果你的目标是“把整个文件夹发给别人，对方直接双击即可演示”，推荐直接使用：
-
-```text
-00_双击打开演示.html
-```
-
-这个文件不依赖 Node.js，不需要安装环境，适合直接发客户或做本地展示。
-
-在 macOS 下，也可以双击：
-
-```text
-open-local.command
-```
-
-## 方式二：开发模式
-
-前提：本机已安装 Node.js
+### 第一步：安装依赖（只需一次）
 
 ```bash
+cd /Users/mj/Ai操作执行/交易中心/trading-center
 npm install
+```
+
+### 第二步：启动后端（终端 1）
+
+```bash
+cd /Users/mj/Ai操作执行/交易中心/trading-center
+npm run server:dev
+```
+
+看到以下信息表示成功：
+```
+🚀 服务器已启动: http://localhost:3001
+📝 测试账号: buyer@test.com / seller@test.com
+🔑 密码: Test1234
+```
+
+### 第三步：启动前端（终端 2）
+
+```bash
+cd /Users/mj/Ai操作执行/交易中心/trading-center
 npm run dev
 ```
 
-启动后访问终端提示的本地地址，默认通常为 `http://localhost:3000`。
+浏览器打开 http://localhost:3000
 
-## 方式三：离线构建后本地打开
+---
 
-前提：本机已安装 Node.js，并已先完成一次构建
+## 测试账号
+
+| 角色 | 邮箱 | 密码 |
+|------|------|------|
+| 买家 | buyer@test.com | Test1234 |
+| 卖家 | seller@test.com | Test1234 |
+| 管理员 | admin@test.com | Test1234 |
+
+---
+
+## 目录结构
+
+```
+交易中心/
+├── src/                  # 前端代码
+│   ├── api/              # API 客户端
+│   ├── hooks/            # React Hooks
+│   └── App.tsx           # 主组件
+├── server/               # 后端代码
+│   ├── src/
+│   │   ├── models/       # 数据模型
+│   │   ├── services/     # 业务逻辑
+│   │   ├── controllers/  # API 控制器
+│   │   └── app.ts        # 入口
+│   └── data/             # SQLite 数据库文件
+└── package.json
+```
+
+---
+
+## API 接口
+
+| 模块 | 方法 | 路径 | 描述 |
+|------|------|------|------|
+| 认证 | POST | `/api/auth/login` | 登录 |
+| 认证 | POST | `/api/auth/register` | 注册 |
+| 库存 | GET | `/api/inventory` | 搜索库存 |
+| 库存 | POST | `/api/inventory` | 发布库存 |
+| 订单 | POST | `/api/orders` | 创建订单 |
+| 订单 | POST | `/api/orders/:id/pay` | 支付 |
+| 订单 | POST | `/api/orders/:id/ship` | 发货 |
+
+---
+
+## 常用命令
 
 ```bash
-npm install
-npm run build:offline
+npm run dev          # 启动前端
+npm run server:dev   # 启动后端
+npm run db:reset     # 重置数据库
 ```
 
-构建完成后，项目根目录会生成：
+---
 
-```text
-B2B_Demo_Offline.html
-```
+## 停止服务
 
-此时有两种打开方式：
+### 前台运行的服务
+
+在运行服务的终端中按 **`Ctrl + C`** 停止。
+
+### 后台运行的服务
+
+如果服务在后台运行，使用以下命令：
 
 ```bash
-open B2B_Demo_Offline.html
+# 查看占用端口的进程
+lsof -i :3001    # 后端端口
+lsof -i :3000    # 前端端口
+
+# 停止进程（将 PID 替换为实际进程号）
+kill -9 <PID>
+
+# 或一键停止所有 Node 进程
+pkill -f node
 ```
 
-## 说明
+### 一键停止脚本
 
-- `00_双击打开演示.html` 是纯静态离线演示页，适合交付给不会运行前端环境的用户。
-- `vite.config.ts` 已使用 `base: './'`，适合本地相对路径打开。
-- `scripts/build-offline.cjs` 会把构建结果整理成单文件 HTML，便于交付和演示。
-- `open-local.command` 会优先打开 `00_双击打开演示.html`，其次再尝试构建产物。
-- 微信小程序：在微信开发者工具中选择「导入项目」，**项目目录**请选本文件夹下的 `miniprogram`。
+```bash
+# 停止后端
+pkill -f "node.*server"
+
+# 停止前端
+pkill -f "vite"
+```

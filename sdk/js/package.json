@@ -1,0 +1,33 @@
+{
+  "name": "@trading-center/sdk",
+  "version": "1.0.0",
+  "description": "Trading Center API SDK for JavaScript/TypeScript",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "test": "vitest"
+  },
+  "keywords": [
+    "trading-center",
+    "api",
+    "sdk"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.17.0"
+  }
+}

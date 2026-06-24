@@ -1,0 +1,88 @@
+import { Router } from 'express';
+import authRoutes from './auth.routes.js';
+import inventoryRoutes from './inventory.routes.js';
+import orderRoutes from './order.routes.js';
+import negotiationRoutes from './negotiation.routes.js';
+import messageRoutes from './message.routes.js';
+import paymentRoutes from './payment.routes.js';
+import certificationRoutes from './certification.routes.js';
+import qualityRoutes from './quality.routes.js';
+import adminRoutes from './admin.routes.js';
+import favoriteRoutes from './favorite.routes.js';
+import followRoutes from './follow.routes.js';
+import alertRoutes from './alert.routes.js';
+import creditRoutes from './credit.routes.js';
+import miniprogramRoutes from './miniprogram.routes.js';
+import newsRoutes from './news.routes.js';
+import searchRoutes from './search.routes.js';
+import batchUploadRoutes from './batch-upload.routes.js';
+import invoiceRoutes from './invoice.routes.js';
+import reviewRoutes from './review.routes.js';
+import wechatRoutes from './wechat.routes.js';
+import logisticsRoutes from './logistics.routes.js';
+import exportRoutes from './export.routes.js';
+import uploadRoutes from './upload.routes.js';
+import packageRoutes from './package.routes.js';
+import tieredPriceRoutes from './tieredPrice.routes.js';
+import customerTagRoutes from './customerTag.routes.js';
+import settlementRoutes from './settlement.routes.js';
+import emailRoutes from './email.routes.js';
+import adviceRoutes from './advice.routes.js';
+import agreementRoutes from './agreement.routes.js';
+import corporatePaymentRoutes from './corporate-payment.routes.js';
+import qaRoutes from './qa.routes.js';
+import userRoutes from './user.routes.js';
+// v3.0 routes
+import apikeyRoutes from './apikey.routes.js';
+import webhookRoutes from './webhook.routes.js';
+import bomRoutes from './bom.routes.js';
+import notificationConfigRoutes from './notification-config.routes.js';
+import systemConfigRoutes from './system-config.routes.js';
+
+const router = Router();
+
+router.get('/health', (_req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+router.use('/auth', authRoutes);
+router.use('/inventory', inventoryRoutes);
+router.use('/orders', orderRoutes);
+router.use('/negotiations', negotiationRoutes);
+router.use('/messages', messageRoutes);
+router.use('/payments', paymentRoutes);
+router.use('/certifications', certificationRoutes);
+router.use('/quality-reports', qualityRoutes);
+router.use('/admin', adminRoutes);
+router.use('/favorites', favoriteRoutes);
+router.use('/follows', followRoutes);
+router.use('/alerts', alertRoutes);
+router.use('/credit', creditRoutes);
+router.use('/miniprogram', miniprogramRoutes);
+router.use('/news', newsRoutes);
+router.use('/search', searchRoutes);
+router.use('/batch-upload', batchUploadRoutes);
+router.use('/invoices', invoiceRoutes);
+router.use('/reviews', reviewRoutes);
+router.use('/auth/wechat', wechatRoutes);
+router.use('/logistics', logisticsRoutes);
+router.use('/export', exportRoutes);
+router.use('/uploads', uploadRoutes);
+router.use('/packages', packageRoutes);
+router.use('/tiered-prices', tieredPriceRoutes);
+router.use('/customer-tags', customerTagRoutes);
+router.use('/settlements', settlementRoutes);
+router.use('/email', emailRoutes);
+router.use('/advice', adviceRoutes);
+router.use('/agreements', agreementRoutes);
+router.use('/corporate-payments', corporatePaymentRoutes);
+router.use('/qa', qaRoutes);
+router.use('/users', userRoutes);
+// v3.0 routes
+router.use('/api-keys', apikeyRoutes);
+router.use('/webhooks', webhookRoutes);
+router.use('/bom', bomRoutes);
+router.use('/notification-config', notificationConfigRoutes);
+router.use('/system-config', systemConfigRoutes);
+
+export default router;

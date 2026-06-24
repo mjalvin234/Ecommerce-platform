@@ -1,32 +1,58 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
 @import "tailwindcss";
 
+/* 使用系统字体栈，避免外部字体加载延迟 */
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-  
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --font-admin-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-admin-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  /* 深色主题 - 前端用户界面 */
   --color-exchange-dark: #0f172a;
+  --color-exchange-dark-deep: #060b18;
+  --color-exchange-dark-card: #0c1425;
   --color-exchange-blue: #1e3a8a;
   --color-exchange-accent: #0284c7;
-  --color-exchange-surface: #f8fafc;
-  --color-exchange-border: #e2e8f0;
+  --color-exchange-cyan: #22d3ee;
+  --color-exchange-surface: #0f172a;
+  --color-exchange-border: rgba(255, 255, 255, 0.08);
+  --color-exchange-border-hover: rgba(255, 255, 255, 0.15);
+
+  /* 管理后台 - 现代专业风格 */
+  --color-admin-primary: #2563EB;
+  --color-admin-primary-hover: #1D4ED8;
+  --color-admin-primary-light: #DBEAFE;
+  --color-admin-secondary: #3B82F6;
+  --color-admin-accent: #F97316;
+  --color-admin-bg: #F8FAFC;
+  --color-admin-card: #FFFFFF;
+  --color-admin-text: #1E293B;
+  --color-admin-text-secondary: #64748B;
+  --color-admin-text-muted: #94A3B8;
+  --color-admin-border: #E2E8F0;
+  --color-admin-border-light: #F1F5F9;
+  --color-admin-success: #10B981;
+  --color-admin-warning: #F59E0B;
+  --color-admin-error: #EF4444;
+  --color-admin-info: #3B82F6;
 }
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--color-exchange-surface);
-  color: var(--color-exchange-dark);
+  background-color: var(--color-exchange-dark);
+  color: #e2e8f0;
 }
 
+/* ─── Dark Theme Data Rows ─── */
 .data-row {
   display: grid;
   padding: 1rem;
-  border-bottom: 1px solid var(--color-exchange-border);
-  transition: background 0.15s ease, color 0.15s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .data-row:hover {
-  background: var(--color-exchange-dark);
+  background: rgba(2, 132, 199, 0.06);
   color: white;
 }
 
@@ -34,7 +60,7 @@ body {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  opacity: 0.6;
+  opacity: 0.5;
   font-weight: 500;
 }
 
@@ -43,9 +69,511 @@ body {
   letter-spacing: -0.02em;
 }
 
+/* ─── Dark Glass Panel ─── */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--color-exchange-border);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.3);
+}
+
+.glass-panel-elevated {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.4);
+}
+
+/* ─── Top Accent Line ─── */
+.accent-line {
+  position: relative;
+}
+
+.accent-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(2, 132, 199, 0.6), transparent);
+}
+
+/* ─── Circuit Grid SVG for pages ─── */
+.circuit-bg {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cdefs%3E%3Cpattern id='cg' x='0' y='0' width='80' height='80' patternUnits='userSpaceOnUse'%3E%3Cline x1='0' y1='20' x2='30' y2='20' stroke='%230284c7' stroke-width='0.6' opacity='0.15'/%3E%3Cline x1='50' y1='20' x2='80' y2='20' stroke='%230284c7' stroke-width='0.6' opacity='0.15'/%3E%3Cline x1='0' y1='60' x2='20' y2='60' stroke='%230284c7' stroke-width='0.6' opacity='0.15'/%3E%3Cline x1='40' y1='60' x2='80' y2='60' stroke='%230284c7' stroke-width='0.6' opacity='0.15'/%3E%3Cline x1='20' y1='0' x2='20' y2='30' stroke='%230284c7' stroke-width='0.6' opacity='0.15'/%3E%3Cline x1='20' y1='50' x2='20' y2='80' stroke='%230284c7' stroke-width='0.6' opacity='0.15'/%3E%3Cline x1='60' y1='0' x2='60' y2='40' stroke='%230284c7' stroke-width='0.6' opacity='0.15'/%3E%3Cline x1='60' y1='55' x2='60' y2='80' stroke='%230284c7' stroke-width='0.6' opacity='0.15'/%3E%3Ccircle cx='20' cy='20' r='2' fill='%230284c7' opacity='0.2'/%3E%3Ccircle cx='60' cy='60' r='1.5' fill='%230284c7' opacity='0.15'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23cg)'/%3E%3C/svg%3E");
+}
+
+/* ─── Glow Effects ─── */
+.glow-accent {
+  box-shadow: 0 0 20px rgba(2, 132, 199, 0.15), 0 0 40px rgba(2, 132, 199, 0.05);
+}
+
+.glow-accent-strong {
+  box-shadow: 0 0 20px rgba(2, 132, 199, 0.25), 0 0 60px rgba(2, 132, 199, 0.1);
+}
+
+.text-glow-accent {
+  text-shadow: 0 0 20px rgba(2, 132, 199, 0.5), 0 0 40px rgba(2, 132, 199, 0.2);
+}
+
+/* ─── Dark Input Styles ─── */
+.dark-input {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  color: white;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.dark-input::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.dark-input:focus {
+  border-color: rgba(2, 132, 199, 0.6);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+/* ─── Dark Select Styles ─── */
+.dark-select {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  color: white;
+  outline: none;
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2rem;
+}
+
+.dark-select:focus {
+  border-color: rgba(2, 132, 199, 0.6);
+  background-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.dark-select option {
+  background: #1e293b;
+  color: white;
+}
+
+/* ─── Dark Checkbox Styles ─── */
+.dark-checkbox {
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.25rem;
+  background: rgba(255, 255, 255, 0.06);
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.dark-checkbox:checked {
+  background: rgba(2, 132, 199, 0.8);
+  border-color: rgba(2, 132, 199, 0.8);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6L5 8.5L9.5 3.5' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* ─── Auth Page Animations ─── */
+
+/* Chip hero glow pulse */
+@keyframes chip-pulse {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.08); }
+}
+.animate-chip-pulse {
+  animation: chip-pulse 3s ease-in-out infinite;
+}
+
+/* Floating particles rising upward */
+@keyframes float-particle {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  100% {
+    transform: translateY(-100vh) translateX(30px);
+    opacity: 0;
+  }
+}
+.animate-float-particle {
+  animation: float-particle linear infinite;
+}
+
+/* Error shake animation */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(3px); }
+}
+.animate-shake {
+  animation: shake 0.4s ease-out;
+}
+
+/* ─── New Dark Theme Animations ─── */
+
+/* Subtle ambient glow pulse for status indicators */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(2, 132, 199, 0.3); }
+  50% { box-shadow: 0 0 12px rgba(2, 132, 199, 0.6), 0 0 24px rgba(2, 132, 199, 0.2); }
+}
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Slide up entrance */
+@keyframes slide-up {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up {
+  animation: slide-up 0.4s ease-out forwards;
+}
+
+/* Scale in for modals */
+@keyframes scale-in {
+  0% { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.animate-scale-in {
+  animation: scale-in 0.2s ease-out forwards;
+}
+
+/* Scanline overlay for sci-fi feel */
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+.animate-scanline {
+  animation: scanline 8s linear infinite;
+}
+
+/* Subtle border glow for hover states */
+@keyframes border-glow {
+  0%, 100% { border-color: rgba(2, 132, 199, 0.2); }
+  50% { border-color: rgba(2, 132, 199, 0.5); }
+}
+
+/* Data stream effect for monospace values */
+@keyframes data-flash {
+  0%, 90%, 100% { opacity: 1; }
+  95% { opacity: 0.5; }
+}
+
+/* Scrollbar styling for dark theme */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Selection color */
+::selection {
+  background: rgba(2, 132, 199, 0.4);
+  color: white;
+}
+
+/* ─── Admin Panel Form Styles ─── */
+
+/* 管理后台输入框统一样式 */
+.admin-input {
+  color: #1e293b; /* text-gray-900 */
+  background-color: white;
+}
+
+.admin-input::placeholder {
+  color: #9ca3af; /* text-gray-400 */
+}
+
+.admin-input:disabled {
+  background-color: #f9fafb; /* bg-gray-50 */
+  color: #6b7280; /* text-gray-500 */
+}
+
+/* 管理后台表格防换行 */
+.admin-table-mono {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 表格单元格最大宽度 */
+.admin-table-cell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 统计卡片数字防换行 */
+.admin-stat-number {
+  white-space: nowrap;
+}
+
+/* 响应式表格容器 */
+.admin-table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   管理后台 - 现代专业风格
+   ═══════════════════════════════════════════════════════════════ */
+
+/* KPI 卡片悬浮效果 */
+.admin-kpi-card {
+  background: white;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-admin-border-light);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.admin-kpi-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+/* 数据表格样式 */
+.admin-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.admin-table thead {
+  background: #F8FAFC;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.admin-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-admin-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--color-admin-border);
+}
+
+.admin-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-admin-border-light);
+  vertical-align: middle;
+}
+
+.admin-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.admin-table tbody tr:hover {
+  background-color: #F8FAFC;
+}
+
+/* 状态徽章 */
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px;
+}
+
+.admin-badge-success {
+  background: #BBF7D0;
+  color: #166534;
+}
+
+.admin-badge-warning {
+  background: #FDE68A;
+  color: #92400E;
+}
+
+.admin-badge-error {
+  background: #FECACA;
+  color: #991B1B;
+}
+
+.admin-badge-info {
+  background: #BFDBFE;
+  color: #1E40AF;
+}
+
+.admin-badge-neutral {
+  background: #E2E8F0;
+  color: #334155;
+}
+
+/* 按钮样式 */
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.admin-btn-primary {
+  background: var(--color-admin-primary);
+  color: white;
+}
+
+.admin-btn-primary:hover {
+  background: var(--color-admin-primary-hover);
+}
+
+.admin-btn-secondary {
+  background: white;
+  color: var(--color-admin-text);
+  border: 1px solid var(--color-admin-border);
+}
+
+.admin-btn-secondary:hover {
+  background: #F8FAFC;
+  border-color: var(--color-admin-text-muted);
+}
+
+.admin-btn-ghost {
+  background: transparent;
+  color: var(--color-admin-text-secondary);
+}
+
+.admin-btn-ghost:hover {
+  background: #F1F5F9;
+  color: var(--color-admin-text);
+}
+
+/* 输入框样式 */
+.admin-input {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  color: var(--color-admin-text);
+  background: white;
+  border: 1px solid var(--color-admin-border);
+  border-radius: 0.5rem;
+  transition: all 0.15s ease;
+  outline: none;
+}
+
+.admin-input:focus {
+  border-color: var(--color-admin-primary);
+  box-shadow: 0 0 0 3px var(--color-admin-primary-light);
+}
+
+.admin-input::placeholder {
+  color: var(--color-admin-text-muted);
+}
+
+/* 骨架屏动画 */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.admin-skeleton {
+  background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  border-radius: 0.375rem;
+}
+
+/* 图表容器 */
+.admin-chart-container {
+  background: white;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-admin-border-light);
+  padding: 1.25rem;
+}
+
+/* 移动端侧边栏遮罩 */
+.admin-sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 40;
+}
+
+/* 响应式断点辅助类 */
+@media (max-width: 640px) {
+  .admin-mobile-hidden {
+    display: none;
+  }
+
+  .admin-mobile-stack {
+    flex-direction: column;
+  }
+
+  .admin-mobile-full {
+    width: 100%;
+  }
+}
+
+/* 图表悬浮提示样式覆盖 */
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+
+.admin-tooltip {
+  background: #1E293B !important;
+  border: none !important;
+  border-radius: 0.5rem !important;
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.75rem !important;
+}
+
+.admin-tooltip-label {
+  color: #94A3B8 !important;
+}
+
+.admin-tooltip-item {
+  color: white !important;
+}
+
+/* 页面渐入动画 */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
 }
