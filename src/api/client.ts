@@ -1,4 +1,6 @@
-const API_BASE = '/api';
+const API_BASE = import.meta.env.PROD
+  ? 'https://ecommerce-platform.mjalvin234-18e.workers.dev/api'
+  : '/api';
 
 interface ApiResponse<T> {
   success: boolean;
