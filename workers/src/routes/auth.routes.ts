@@ -89,7 +89,7 @@ authRoutes.post('/login', async (c) => {
 // 注册
 authRoutes.post('/register', async (c) => {
   try {
-    const { email, password, companyName } = await c.req.json();
+    const { email, password, companyName, role } = await c.req.json();
 
     if (!email || !password || !companyName) {
       return c.json({
@@ -97,6 +97,9 @@ authRoutes.post('/register', async (c) => {
         error: { message: '请填写完整信息' },
       }, 400);
     }
+
+    // 验证角色
+    const userRole = role === 'seller' ? 'seller' : 'buyer';
 
     // 检查邮箱是否已存在
     const existing = await c.env.DB.prepare(
@@ -117,12 +120,13 @@ authRoutes.post('/register', async (c) => {
 
     await c.env.DB.prepare(`
       INSERT INTO users (id, email, password_hash, company_name, role, verification_status, anonymous_hash, credit_score, created_at, updated_at)
-      VALUES (?, ?, ?, ?, 'buyer', 'pending', ?, 60, ?, ?)
+      VALUES (?, ?, ?, ?, ?, 'pending', ?, 60, ?, ?)
     `).bind(
       id,
       email.toLowerCase(),
       passwordHash,
       companyName,
+      userRole,
       anonymousHash,
       new Date().toISOString(),
       new Date().toISOString()
@@ -133,7 +137,7 @@ authRoutes.post('/register', async (c) => {
     const registerTokenOptions: SignOptions = { expiresIn: '7d' };
 
     const token = sign(
-      { id, email: email.toLowerCase(), role: 'buyer' },
+      { id, email: email.toLowerCase(), role: userRole },
       jwtSecret,
       registerTokenOptions
     );
@@ -145,7 +149,7 @@ authRoutes.post('/register', async (c) => {
           id,
           email: email.toLowerCase(),
           companyName,
-          role: 'buyer',
+          role: userRole,
           verificationStatus: 'pending',
           creditScore: 60,
         },
