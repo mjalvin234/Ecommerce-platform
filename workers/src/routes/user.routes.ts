@@ -1,7 +1,8 @@
 import { Hono } from 'hono';
+import type { Bindings, Variables } from '../types';
 import { authMiddleware } from '../middlewares/auth.middleware';
 
-const userRoutes = new Hono();
+const userRoutes = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 // 所有用户路由都需要认证
 userRoutes.use('*', authMiddleware);
@@ -9,6 +10,13 @@ userRoutes.use('*', authMiddleware);
 // 获取当前用户信息
 userRoutes.get('/me', async (c) => {
   const user = c.get('user');
+
+  if (!user) {
+    return c.json({
+      success: false,
+      error: { message: '未授权' },
+    }, 401);
+  }
 
   const result = await c.env.DB.prepare(
     'SELECT id, email, company_name, role, verification_status, credit_score, created_at FROM users WHERE id = ?'
@@ -38,6 +46,14 @@ userRoutes.get('/me', async (c) => {
 // 更新用户信息
 userRoutes.put('/me', async (c) => {
   const user = c.get('user');
+
+  if (!user) {
+    return c.json({
+      success: false,
+      error: { message: '未授权' },
+    }, 401);
+  }
+
   const { companyName } = await c.req.json();
 
   if (!companyName) {

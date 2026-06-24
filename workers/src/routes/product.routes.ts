@@ -1,7 +1,8 @@
 import { Hono } from 'hono';
+import type { Bindings, Variables } from '../types';
 import { authMiddleware, adminMiddleware } from '../middlewares/auth.middleware';
 
-const productRoutes = new Hono();
+const productRoutes = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 // 获取产品列表（公开）
 productRoutes.get('/', async (c) => {
@@ -57,6 +58,14 @@ productRoutes.get('/:id', async (c) => {
 // 创建产品（需要认证）
 productRoutes.post('/', authMiddleware, async (c) => {
   const user = c.get('user');
+
+  if (!user) {
+    return c.json({
+      success: false,
+      error: { message: '未授权' },
+    }, 401);
+  }
+
   const { name, description, category, quantity, price, unit } = await c.req.json();
 
   // 验证必填字段

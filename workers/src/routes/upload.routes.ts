@@ -1,8 +1,9 @@
 import { Hono } from 'hono';
+import type { Bindings, Variables } from '../types';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { v4 as uuidv4 } from 'uuid';
 
-const uploadRoutes = new Hono();
+const uploadRoutes = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 uploadRoutes.use('*', authMiddleware);
 
@@ -10,6 +11,14 @@ uploadRoutes.use('*', authMiddleware);
 uploadRoutes.post('/', async (c) => {
   try {
     const user = c.get('user');
+
+    if (!user) {
+      return c.json({
+        success: false,
+        error: { message: '未授权' },
+      }, 401);
+    }
+
     const contentType = c.req.header('Content-Type') || '';
 
     if (!contentType.includes('multipart/form-data')) {
@@ -100,6 +109,14 @@ uploadRoutes.get('/:userId/:filename', async (c) => {
 // 删除文件
 uploadRoutes.delete('/:userId/:filename', async (c) => {
   const user = c.get('user');
+
+  if (!user) {
+    return c.json({
+      success: false,
+      error: { message: '未授权' },
+    }, 401);
+  }
+
   const { userId, filename } = c.req.param();
 
   // 验证权限

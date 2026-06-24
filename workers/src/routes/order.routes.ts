@@ -1,13 +1,22 @@
 import { Hono } from 'hono';
+import type { Bindings, Variables } from '../types';
 import { authMiddleware } from '../middlewares/auth.middleware';
 
-const orderRoutes = new Hono();
+const orderRoutes = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 orderRoutes.use('*', authMiddleware);
 
 // 获取订单列表
 orderRoutes.get('/', async (c) => {
   const user = c.get('user');
+
+  if (!user) {
+    return c.json({
+      success: false,
+      error: { message: '未授权' },
+    }, 401);
+  }
+
   const { status, page = '1', limit = '10' } = c.req.query();
 
   const offset = (parseInt(page) - 1) * parseInt(limit);
@@ -52,6 +61,14 @@ orderRoutes.get('/', async (c) => {
 // 获取订单详情
 orderRoutes.get('/:id', async (c) => {
   const user = c.get('user');
+
+  if (!user) {
+    return c.json({
+      success: false,
+      error: { message: '未授权' },
+    }, 401);
+  }
+
   const orderId = c.req.param('id');
 
   const order = await c.env.DB.prepare(

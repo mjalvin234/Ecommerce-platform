@@ -1,6 +1,9 @@
 import { Context } from 'hono';
+import type { Bindings, Variables } from '../types';
 
-export const errorHandler = (err: Error, c: Context) => {
+type AppContext = Context<{ Bindings: Bindings; Variables: Variables }>;
+
+export const errorHandler = (err: Error, c: AppContext) => {
   console.error('Error:', err);
 
   // JWT 错误

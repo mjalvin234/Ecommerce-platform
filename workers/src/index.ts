@@ -4,30 +4,9 @@ import { logger } from 'hono/logger';
 import { prettyJSON } from 'hono/pretty-json';
 import { secureHeaders } from 'hono/secure-headers';
 
+import type { Bindings, Variables } from './types';
 import { errorHandler } from './middlewares/error.middleware';
 import routes from './routes/index';
-
-// 定义环境变量类型
-type Bindings = {
-  DB: D1Database;
-  UPLOADS: R2Bucket;
-  ENVIRONMENT: string;
-  JWT_SECRET: string;
-  JWT_EXPIRES_IN: string;
-  JWT_REFRESH_EXPIRES_IN: string;
-  ENCRYPTION_KEY: string;
-  ADMIN_EMAIL?: string;
-  ADMIN_PASSWORD?: string;
-  ADMIN_NAME?: string;
-};
-
-type Variables = {
-  user?: {
-    id: string;
-    email: string;
-    role: string;
-  };
-};
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 

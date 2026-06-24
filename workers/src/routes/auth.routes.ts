@@ -1,9 +1,10 @@
 import { Hono } from 'hono';
-import { sign } from 'jsonwebtoken';
+import type { Bindings, Variables } from '../types';
+import { sign, type SignOptions } from 'jsonwebtoken';
 import { hash, compare } from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 
-const authRoutes = new Hono();
+const authRoutes = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 // 登录
 authRoutes.post('/login', async (c) => {
@@ -41,16 +42,19 @@ authRoutes.post('/login', async (c) => {
 
     // 生成 Token
     const jwtSecret = c.env.JWT_SECRET;
+    const tokenOptions: SignOptions = { expiresIn: '7d' };
+    const refreshOptions: SignOptions = { expiresIn: '30d' };
+
     const token = sign(
       { id: result.id, email: result.email, role: result.role },
       jwtSecret,
-      { expiresIn: c.env.JWT_EXPIRES_IN || '7d' }
+      tokenOptions
     );
 
     const refreshToken = sign(
       { id: result.id },
       jwtSecret,
-      { expiresIn: c.env.JWT_REFRESH_EXPIRES_IN || '30d' }
+      refreshOptions
     );
 
     // 更新最后登录时间
@@ -126,10 +130,12 @@ authRoutes.post('/register', async (c) => {
 
     // 生成 Token
     const jwtSecret = c.env.JWT_SECRET;
+    const registerTokenOptions: SignOptions = { expiresIn: '7d' };
+
     const token = sign(
       { id, email: email.toLowerCase(), role: 'buyer' },
       jwtSecret,
-      { expiresIn: c.env.JWT_EXPIRES_IN || '7d' }
+      registerTokenOptions
     );
 
     return c.json({
@@ -183,16 +189,19 @@ authRoutes.post('/refresh', async (c) => {
     }
 
     // 生成新令牌
+    const newTokenOptions: SignOptions = { expiresIn: '7d' };
+    const newRefreshOptions: SignOptions = { expiresIn: '30d' };
+
     const token = sign(
       { id: user.id, email: user.email, role: user.role },
       jwtSecret,
-      { expiresIn: c.env.JWT_EXPIRES_IN || '7d' }
+      newTokenOptions
     );
 
     const newRefreshToken = sign(
       { id: user.id },
       jwtSecret,
-      { expiresIn: c.env.JWT_REFRESH_EXPIRES_IN || '30d' }
+      newRefreshOptions
     );
 
     return c.json({

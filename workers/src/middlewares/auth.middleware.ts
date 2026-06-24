@@ -1,7 +1,10 @@
 import { Context, Next } from 'hono';
+import type { Bindings, Variables } from '../types';
 import { verify } from 'jsonwebtoken';
 
-export const authMiddleware = async (c: Context, next: Next) => {
+type AppContext = Context<{ Bindings: Bindings; Variables: Variables }>;
+
+export const authMiddleware = async (c: AppContext, next: Next) => {
   try {
     const authHeader = c.req.header('Authorization');
 
@@ -40,7 +43,7 @@ export const authMiddleware = async (c: Context, next: Next) => {
   }
 };
 
-export const adminMiddleware = async (c: Context, next: Next) => {
+export const adminMiddleware = async (c: AppContext, next: Next) => {
   const user = c.get('user');
 
   if (!user || user.role !== 'admin') {
@@ -53,7 +56,7 @@ export const adminMiddleware = async (c: Context, next: Next) => {
   await next();
 };
 
-export const optionalAuthMiddleware = async (c: Context, next: Next) => {
+export const optionalAuthMiddleware = async (c: AppContext, next: Next) => {
   try {
     const authHeader = c.req.header('Authorization');
 
