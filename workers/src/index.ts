@@ -17,11 +17,7 @@ app.use('*', secureHeaders());
 
 // CORS 配置
 app.use('*', cors({
-  origin: [
-    'http://localhost:3000',
-    'https://mjalvin234.github.io',
-    'https://mjalvin234.github.io',
-  ],
+  origin: '*',
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
