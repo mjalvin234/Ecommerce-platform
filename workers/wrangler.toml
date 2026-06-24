@@ -10,12 +10,12 @@ compatibility_flags = ["nodejs_compat"]
 [[d1_databases]]
 binding = "DB"
 database_name = "trading-center-db"
-database_id = "your-database-id"  # 部署时需要修改
+database_id = "9ca20eef-c3f9-4f7c-b17f-a39bd0a33717"
 
-# R2 存储绑定（用于文件上传）
-[[r2_buckets]]
-binding = "UPLOADS"
-bucket_name = "trading-center-uploads"
+# R2 存储绑定（用于文件上传）- 暂时禁用，需要绑定支付卡
+# [[r2_buckets]]
+# binding = "UPLOADS"
+# bucket_name = "trading-center-uploads"
 
 # 环境变量（敏感信息请使用 wrangler secret put）
 [vars]

@@ -18,14 +18,14 @@ B2B 电子元器件交易平台（React + Express + SQLite）
 ### 第一步：安装依赖（只需一次）
 
 ```bash
-cd /Users/mj/Ai操作执行/交易中心/trading-center
+cd /trading-center
 npm install
 ```
 
 ### 第二步：启动后端（终端 1）
 
 ```bash
-cd /Users/mj/Ai操作执行/交易中心/trading-center
+cd /trading-center
 npm run server:dev
 ```
 
@@ -39,7 +39,7 @@ npm run server:dev
 ### 第三步：启动前端（终端 2）
 
 ```bash
-cd /Users/mj/Ai操作执行/交易中心/trading-center
+cd /trading-center
 npm run dev
 ```
 
