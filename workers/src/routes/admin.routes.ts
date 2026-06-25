@@ -1,7 +1,11 @@
 import { Hono } from 'hono';
 import type { Bindings, Variables } from '../types';
+import { authMiddleware } from '../middlewares/auth.middleware';
 
 const adminRoutes = new Hono<{ Bindings: Bindings; Variables: Variables }>();
+
+// 所有管理路由都需要先认证
+adminRoutes.use('*', authMiddleware);
 
 // 中间件：验证管理员权限
 adminRoutes.use('*', async (c, next) => {

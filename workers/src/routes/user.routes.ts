@@ -73,4 +73,24 @@ userRoutes.put('/me', async (c) => {
   });
 });
 
+// 获取用户支付信息
+userRoutes.get('/me/payment', async (c) => {
+  const user = c.get('user');
+  if (!user) return c.json({ success: false, error: { message: '请先登录' } }, 401);
+
+  try {
+    const result = await c.env.DB.prepare(`
+      SELECT payment_methods FROM users WHERE id = ?
+    `).bind(user.id).first();
+
+    // 返回默认支付方式
+    return c.json({
+      methods: result?.payment_methods ? JSON.parse(result.payment_methods as string) : [],
+      defaultMethod: null,
+    });
+  } catch (error) {
+    return c.json({ methods: [], defaultMethod: null });
+  }
+});
+
 export default userRoutes;

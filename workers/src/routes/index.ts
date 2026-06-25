@@ -18,6 +18,16 @@ import searchRoutes from './search.routes';
 import favoritesRoutes from './favorites.routes';
 import creditRoutes from './credit.routes';
 import paymentRoutes from './payment.routes';
+import notificationRoutes from './notification.routes';
+import alertRoutes from './alert.routes';
+import followRoutes from './follow.route';
+import reviewRoutes from './review.route';
+import newsRoutes from './news.route';
+import logisticsRoutes from './logistics.route';
+import apikeyRoutes from './apikey.route';
+import webhookRoutes from './webhook.route';
+import packageRoutes from './package.route';
+import tieredPriceRoutes from './tieredprice.route';
 
 const routes = new Hono();
 
@@ -41,5 +51,15 @@ routes.route('/search', searchRoutes);
 routes.route('/favorites', favoritesRoutes);
 routes.route('/credit', creditRoutes);
 routes.route('/payments', paymentRoutes);
+routes.route('/notification-config', notificationRoutes);
+routes.route('/alerts', alertRoutes);
+routes.route('/follows', followRoutes);
+routes.route('/reviews', reviewRoutes);
+routes.route('/news', newsRoutes);
+routes.route('/logistics', logisticsRoutes);
+routes.route('/api-keys', apikeyRoutes);
+routes.route('/webhooks', webhookRoutes);
+routes.route('/packages', packageRoutes);
+routes.route('/tiered-prices', tieredPriceRoutes);
 
 export default routes;

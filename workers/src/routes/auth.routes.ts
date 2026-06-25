@@ -3,6 +3,7 @@ import type { Bindings, Variables } from '../types';
 import { sign, type SignOptions } from 'jsonwebtoken';
 import { hash, compare } from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
+import { authMiddleware } from '../middlewares/auth.middleware';
 
 const authRoutes = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -165,6 +166,48 @@ authRoutes.post('/register', async (c) => {
   }
 });
 
+// 获取当前用户信息
+authRoutes.get('/profile', authMiddleware, async (c) => {
+  try {
+    const user = c.get('user');
+    if (!user) {
+      return c.json({
+        success: false,
+        error: { message: '未授权' },
+      }, 401);
+    }
+
+    const result = await c.env.DB.prepare(
+      'SELECT id, email, company_name, role, verification_status, credit_score FROM users WHERE id = ? AND deleted_at IS NULL'
+    ).bind(user.id).first();
+
+    if (!result) {
+      return c.json({
+        success: false,
+        error: { message: '用户不存在' },
+      }, 404);
+    }
+
+    return c.json({
+      success: true,
+      data: {
+        id: result.id,
+        email: result.email,
+        companyName: result.company_name,
+        role: result.role,
+        verificationStatus: result.verification_status,
+        creditScore: result.credit_score,
+      },
+    });
+  } catch (error) {
+    console.error('获取用户信息错误:', error);
+    return c.json({
+      success: false,
+      error: { message: '获取用户信息失败' },
+    }, 500);
+  }
+});
+
 // 刷新令牌
 authRoutes.post('/refresh', async (c) => {
   try {
@@ -217,6 +260,47 @@ authRoutes.post('/refresh', async (c) => {
       success: false,
       error: { message: '刷新令牌无效' },
     }, 401);
+  }
+});
+
+// 绑定微信
+authRoutes.post('/wechat/bind', authMiddleware, async (c) => {
+  const user = c.get('user');
+  if (!user) {
+    return c.json({ success: false, error: { message: '请先登录' } }, 401);
+  }
+
+  const { code } = await c.req.json();
+
+  // 模拟微信绑定（实际需要调用微信 API）
+  try {
+    // 这里应该调用微信 API 获取 openid
+    // 目前返回模拟数据
+    return c.json({
+      success: true,
+      data: { message: '微信绑定成功' },
+    });
+  } catch (error) {
+    return c.json({ success: false, error: { message: '微信绑定失败' } }, 500);
+  }
+});
+
+// 解绑微信
+authRoutes.post('/wechat/unbind', authMiddleware, async (c) => {
+  const user = c.get('user');
+  if (!user) {
+    return c.json({ success: false, error: { message: '请先登录' } }, 401);
+  }
+
+  try {
+    // 清除用户的微信 openid
+    await c.env.DB.prepare(`
+      UPDATE users SET wechat_openid = NULL, updated_at = ? WHERE id = ?
+    `).bind(new Date().toISOString(), user.id).run();
+
+    return c.json({ success: true });
+  } catch (error) {
+    return c.json({ success: false, error: { message: '解绑失败' } }, 500);
   }
 });
 
