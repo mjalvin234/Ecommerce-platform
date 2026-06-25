@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getApiUrl } from '../config/api';
 
 interface InvoiceFormData {
   invoiceType: 'normal' | 'special';
@@ -39,7 +40,7 @@ export const InvoiceForm: React.FC = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/api/invoices/info', {
+      const response = await fetch(getApiUrl('invoices/info'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getApiUrl } from '../config/api';
 
 interface UsageAdvice {
   category: string;
@@ -27,7 +28,7 @@ export const UsageAdviceCard: React.FC<{
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(
-        `http://localhost:3001/api/advice/usage/dummy?brand=${brand}&model=${model}&year=${year}&quantity=${quantity}`,
+        getApiUrl(`advice/usage/dummy?brand=${brand}&model=${model}&year=${year}&quantity=${quantity}`),
         {
           headers: {
             'Authorization': `Bearer ${token}`,

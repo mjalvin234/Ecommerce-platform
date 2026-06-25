@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../config/api';
 
 interface LoginLog {
   id: string;
@@ -33,7 +34,7 @@ export const LoginHistory: React.FC = () => {
   const fetchLoginHistory = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/api/email/login-history?limit=10', {
+      const response = await fetch(getApiUrl('email/login-history?limit=10'), {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -53,7 +54,7 @@ export const LoginHistory: React.FC = () => {
   const fetchLoginStats = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/api/email/login-stats', {
+      const response = await fetch(getApiUrl('email/login-stats'), {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

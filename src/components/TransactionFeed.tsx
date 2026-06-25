@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../config/api';
 
 interface Transaction {
   id: string;
@@ -24,7 +25,7 @@ export const TransactionFeed: React.FC = () => {
     setLoading(true);
     try {
       // 获取最近的交易记录
-      const response = await fetch('http://localhost:3001/api/orders/recent-transactions?limit=10');
+      const response = await fetch(getApiUrl('orders/recent-transactions?limit=10'));
 
       if (response.ok) {
         const data = await response.json();

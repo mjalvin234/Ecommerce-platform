@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../config/api';
 
 interface Negotiation {
   id: string;
@@ -36,7 +37,7 @@ export const NegotiationHistory: React.FC<{ role: 'buyer' | 'seller' }> = ({ rol
       }
 
       const response = await fetch(
-        `http://localhost:3001/api/negotiations/history?${params.toString()}`,
+        getApiUrl(`negotiations/history?${params.toString()}`),
         {
           headers: {
             'Authorization': `Bearer ${token}`,

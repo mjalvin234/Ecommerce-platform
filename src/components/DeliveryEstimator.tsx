@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getApiUrl } from '../config/api';
 
 interface DeliveryEstimate {
   totalDays: number;
@@ -37,7 +38,7 @@ export const DeliveryEstimator: React.FC = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/api/advice/delivery-estimate', {
+      const response = await fetch(getApiUrl('advice/delivery-estimate'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
