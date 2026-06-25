@@ -64,6 +64,55 @@ negotiationRoutes.post('/', async (c) => {
   }
 });
 
+// 获取议价历史（根据用户角色返回）
+negotiationRoutes.get('/history', async (c) => {
+  try {
+    const user = c.get('user');
+    if (!user) return c.json({ success: false, error: { message: '请先登录' } }, 401);
+
+    const status = c.req.query('status') || '';
+
+    let whereClause = 'WHERE (n.buyer_id = ? OR n.seller_id = ?) AND n.deleted_at IS NULL';
+    const params: any[] = [user.id, user.id];
+
+    if (status && status !== 'all') {
+      whereClause += ' AND n.status = ?';
+      params.push(status);
+    }
+
+    const result = await c.env.DB.prepare(`
+      SELECT n.*, i.part_number as inventory_part_number,
+             b.company_name as buyer_name, s.company_name as seller_name
+      FROM negotiations n
+      LEFT JOIN inventory i ON n.inventory_id = i.id
+      LEFT JOIN users b ON n.buyer_id = b.id
+      LEFT JOIN users s ON n.seller_id = s.id
+      ${whereClause}
+      ORDER BY n.created_at DESC
+    `).bind(...params).all();
+
+    return c.json({
+      negotiations: result.results?.map((n: any) => ({
+        id: n.id,
+        inventoryId: n.inventory_id,
+        inventoryPartNumber: n.inventory_part_number,
+        sellerId: n.seller_id,
+        sellerName: n.seller_name,
+        buyerId: n.buyer_id,
+        buyerName: n.buyer_name,
+        originalPrice: n.seller_price,
+        proposedPrice: n.offer_price,
+        quantity: n.quantity,
+        status: n.status,
+        createdAt: n.created_at,
+      })) || [],
+    });
+  } catch (error) {
+    console.error('获取议价历史错误:', error);
+    return c.json({ negotiations: [] });
+  }
+});
+
 // 获取买家的议价列表
 negotiationRoutes.get('/buyer', async (c) => {
   try {

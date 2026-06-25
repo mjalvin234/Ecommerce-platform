@@ -5,6 +5,51 @@ import { v4 as uuidv4 } from 'uuid';
 
 const orderRoutes = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
+// 公开接口：最近交易（不需要登录）
+orderRoutes.get('/recent-transactions', async (c) => {
+  try {
+    const limit = parseInt(c.req.query('limit') || '10');
+
+    const result = await c.env.DB.prepare(`
+      SELECT
+        o.id,
+        o.order_number,
+        o.part_number,
+        o.product_name,
+        o.quantity,
+        o.total_amount,
+        o.status,
+        o.created_at,
+        b.company_name as buyer_name,
+        s.company_name as seller_name
+      FROM orders o
+      LEFT JOIN users b ON o.buyer_id = b.id
+      LEFT JOIN users s ON o.seller_id = s.id
+      WHERE o.deleted_at IS NULL AND o.status IN ('completed', 'shipped', 'paid')
+      ORDER BY o.created_at DESC
+      LIMIT ?
+    `).bind(limit).all();
+
+    return c.json({
+      success: true,
+      data: result.results?.map((o: any) => ({
+        id: o.id,
+        orderNumber: o.order_number,
+        partNumber: o.part_number || o.product_name,
+        quantity: o.quantity,
+        totalAmount: o.total_amount,
+        status: o.status,
+        buyer: o.buyer_name,
+        seller: o.seller_name,
+        createdAt: o.created_at,
+      })) || [],
+    });
+  } catch (error) {
+    console.error('获取最近交易错误:', error);
+    return c.json({ success: false, error: { message: '获取最近交易失败' } }, 500);
+  }
+});
+
 orderRoutes.use('*', authMiddleware);
 
 // 创建订单
